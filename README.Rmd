@@ -1,0 +1,47 @@
+___
+title: 'Mapping and Visualizing Crime Reports in Berkeley'
+___
+
+#Introduction
+
+#The Data
+
+
+```{r fig.width = 20, fig.height = 4}
+
+
+library(dplyr)
+library(readr)
+library(lubridate)
+library(ggplot2)
+library(ggmap)
+
+train <- 
+  read_csv(file='BerkeleyPD.csv')
+  
+
+unique(train$CVLEGEND)
+
+ggplot(data = train) +  
+  geom_bar(mapping = aes(x = CVLEGEND, fill = OFFENSE), position = "dodge")
+
+ggplot(data = train) +  
+  geom_bar(mapping = aes(x = CVLEGEND), position = "dodge")
+
+```
+
+
+```{r}
+library(ggmap)
+
+map <- 
+  read_csv(file='BerkeleyPD.csv')
+
+map <- map %>%
+  filter(CVLEGEND %in% c("ASSAULT", "BURGLARY - VEHICLE", "BURGLARY - RESIDENTIAL", "SEX CRIME"))
+
+ggmap(map, extent='device', legend="topleft") + 
+  geom_point(aes(location=Block_Location, colour=CVLEGEND), data=mapdata ) + 
+  ggtitle('Violent Crime Reports in Berkeley')
+```
+
